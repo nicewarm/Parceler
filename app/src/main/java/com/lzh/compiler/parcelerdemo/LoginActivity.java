@@ -1,6 +1,7 @@
 package com.lzh.compiler.parcelerdemo;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.view.View;
 import android.widget.TextView;
@@ -10,6 +11,11 @@ import com.lzh.compiler.parceler.annotation.Arg;
 import com.lzh.compiler.parceler.annotation.Dispatcher;
 import com.lzh.compiler.parceler.annotation.NonNull;
 import com.lzh.compiler.parcelerdemo.base.BaseActivity;
+import com.lzh.compiler.parcelerdemo.bean.Info;
+import com.lzh.compiler.parcelerdemo.bean.UserInfo;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -19,7 +25,6 @@ public class LoginActivity extends BaseActivity {
 
     @Arg("hello")
     String username;
-    @NonNull
     @Arg
     String password;
 
@@ -36,9 +41,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         userTv.setText(username);
         psdTv.setText(password);
+        Parceler.toEntity(new UserInfo(),getIntent());
     }
 
     @OnTextChanged(value = R.id.username,callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -54,11 +59,11 @@ public class LoginActivity extends BaseActivity {
     void onInjectClick (View v) {
         switch (v.getId()) {
             case R.id.injectBundle:
-                bundle = Parceler.injectToBundle(this,new Bundle());
+                bundle = Parceler.toBundle(this,new Bundle());
                 info.setText(bundle.toString());
                 break;
             case R.id.injectData:
-                Parceler.injectToEntity(this,bundle);
+                Parceler.toEntity(this,bundle);
                 userTv.setText(username);
                 psdTv.setText(password);
                 break;

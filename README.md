@@ -3,32 +3,21 @@
 
 A simple library for easily put and get data from Bundle automatically.
 
-###Dependencies
+### Dependencies
 
 LastestVersion=[ ![Download](https://api.bintray.com/packages/yjfnypeu/maven/Parceler/images/download.svg) ](https://bintray.com/yjfnypeu/maven/Parceler/_latestVersion)
 
 ```Groovy
-//1.add it to build.gradle of root project
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-    }
-}
-
-//2.add it to build.gradle of app project
-apply plugin: 'com.neenbedankt.android-apt'
+//1.add it to build.gradle in Android module
 dependencies {
-    apt "org.lzh.compiler.parceler:parceler-compiler:$LastestVersion"
-    compile "org.lzh.compiler.parceler:parceler-api:$LastestVersion"
+    annotationProcessor "org.lzh.compiler.parceler:parceler-compiler:LastestVersion"
+    compile "org.lzh.compiler.parceler:parceler-api:LastestVersion"
 }
 ```
 
 [中文使用文档](./USAGE-CH.md)
 
-###Usage
+### Usage
 **Parceler** is a compile-time injection framework, by using **apt** to generate the classes,
 there are nearly no issue of runtime <i>PERFORMANCE</i>.
 
@@ -49,13 +38,13 @@ public class UserInfo {
     private String address;
     public UserInfo (Bundle data) {
         // inject data from bundle to fields
-        Parceler.injectToEntity(this, data);
+        Parceler.toEntity(this, data);
     }
 
     public Bundle getBundle () {
         // inject data from UserInfo to bundle
         Bundle data = new Bundle();
-        Parceler.injectToBundle(this, data);
+        Parceler.toBundle(this, data);
         return data;
     }
     
@@ -78,19 +67,19 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Parceler.injectToEntity(this,getIntent());
+        Parceler.toEntity(this,getIntent());
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Parceler.injectToBundle(this,outState);
+        Parceler.toBundle(this,outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Parceler.injectToEntity(this,savedInstanceState);
+        Parceler.toEntity(this,savedInstanceState);
     }
 }
 ```
@@ -126,7 +115,7 @@ If you want to handle `Intent` object(e.g. to add flags, or start activity for r
 Intent intent = new LoginActivityDispatcher(password).setUsername(username).getIntent(activity);
 ```
 
-###ChangeLogs
+### ChangeLogs
 
  - 0.7
  ```
@@ -142,7 +131,7 @@ Intent intent = new LoginActivityDispatcher(password).setUsername(username).getI
  Some optimizes
  ```
 
-###Proguard
+### Proguard
 ```Proguard
 -keep class com.lzh.compiler.parceler.**
 -dontwarn com.lzh.compiler.parceler.processor.**
@@ -153,7 +142,7 @@ Intent intent = new LoginActivityDispatcher(password).setUsername(username).getI
 }
 ```
 
-###Contacts
+### Contacts
 Email:470368500@qq.com<br>
 QQ Group:108895031
 
